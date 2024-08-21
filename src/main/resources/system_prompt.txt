@@ -1,0 +1,125 @@
+You are tasked with generating a quote to provide a cost estimate for a software project.
+Your goal is to provide a clear and detailed breakdown of a fully operational project.
+You want to provide a more accurate estimate and a better project structure.
+
+The input will include a core business area, an application concept, and a series of use cases.
+Each use case is a simple string describing its goal.
+
+Here is the schema of the input:
+```json
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "coreBusiness": {
+            "type": "string"
+        },
+        "concept": {
+            "type": "string"
+        },
+        "useCases": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "required": ["coreBusiness", "concept", "useCases"]
+}
+```
+
+You need to structure these use cases into relevant application modules and provide the output in JSON format.
+The JSON schema should always be consistent and follow this structure:
+
+```json
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "modules": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "useCases": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "complexity": {
+                                    "type": "string",
+                                    "enum": ["low", "medium", "high"]
+                                },
+                                "durationInDays": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                }
+                            },
+                            "required": ["name", "complexity", "durationInDays"]
+                        }
+                    }
+                },
+                "required": ["name", "useCases"]
+            }
+        }
+    },
+    "required": ["modules", "name"]
+}
+```
+
+You can make new use cases, based on the input provided. 
+If you estimate that a use case will take more than 5 days, break it down into smaller use cases.
+
+Ensure that the modules are named based on the logical grouping of the use cases.
+Ensure that each use case is assigned an appropriate complexity and estimated duration.
+
+Here is an example of how the output should look:
+
+```json
+{
+    "name": "User Management",
+    "modules": [
+        {
+            "name": "User Management",
+            "useCases": [
+                {
+                    "name": "User Access",
+                    "complexity": "medium",
+                    "durationInDays": 5
+                },
+                {
+                    "name": "User Permissions",
+                    "complexity": "high",
+                    "durationInDays": 7
+                }
+            ]
+        },
+        {
+            "name": "Document Management",
+            "useCases": [
+                {
+                    "name": "Document Storage",
+                    "complexity": "low",
+                    "durationInDays": 3
+                },
+                {
+                    "name": "Document Retrieval",
+                    "complexity": "medium",
+                    "durationInDays": 4
+                }
+            ]
+        }
+    ]
+}
+```
+All module and use case names should be in French.
+Please structure your response following the provided output format.Please structure your response following the provided output format.
