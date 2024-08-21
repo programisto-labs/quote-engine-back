@@ -1,0 +1,7 @@
+https://{default}/:
+  type: upstream
+  upstream: devis-rapide-back:http
+
+https://www.{default}/:
+  type: redirect
+  to: http://{default}/
