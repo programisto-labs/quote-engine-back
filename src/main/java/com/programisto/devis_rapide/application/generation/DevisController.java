@@ -38,18 +38,24 @@ public class DevisController {
         return ResponseEntity.ok(mapper.mapToDevisDTO(devis));
     }
 
-    @PostMapping(value = "/autocomplete", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/scenario/autocomplete", consumes = "application/json", produces = "application/json")
     public ResponseEntity<AutocompleteDTO> autocomplete(@RequestBody DemandeClientDTO dto) {
         DemandeClient entity = mapper.mapToDemandeClient(dto);
         Autocomplete suggestions = service.autocomplete(entity);
         return ResponseEntity.ok(mapper.mapToAutocompleteDTO(suggestions));
     }
 
-    @PostMapping(value = "/autocomplete/inline", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/scenario/autocomplete/inline", consumes = "application/json", produces = "application/json")
     public ResponseEntity<AutocompleteDTO> inlineAutocomplete(@RequestBody ScenarioChunkDTO dto) {
         ScenarioChunk entity = mapper.mapToScenarioChunk(dto);
         Autocomplete suggestions = service.inlineAutocomplete(entity);
         return ResponseEntity.ok(mapper.mapToAutocompleteDTO(suggestions));
+    }
+
+    @PostMapping(value = "/demande/new", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<DemandeClientDTO> extractDemande(@RequestBody String entity) {
+        DemandeClient demandeClient = service.extractDemande(entity);
+        return ResponseEntity.ok(mapper.mapToDemandeClientDTO(demandeClient));
     }
 
 }

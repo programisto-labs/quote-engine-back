@@ -27,4 +27,8 @@ public class DevisService {
     public Autocomplete inlineAutocomplete(ScenarioChunk scenarioChunk) {
         return repository.inlineAutocomplete(scenarioChunk);
     }
+
+    public DemandeClient extractDemande(String entity) {
+        return repository.extractDemande(entity);
+    }
 }

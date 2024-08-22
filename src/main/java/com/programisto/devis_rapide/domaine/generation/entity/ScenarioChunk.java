@@ -1,6 +1,5 @@
 package com.programisto.devis_rapide.domaine.generation.entity;
 
-import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonAlias;

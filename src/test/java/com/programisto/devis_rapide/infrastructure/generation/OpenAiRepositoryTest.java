@@ -23,8 +23,7 @@ class OpenAiRepositoryTest {
     @Test
     ////////////////////////////////////////////////////////////////////////////
     //
-    // TODO: Ce test est a revoir
-    //
+    // TODO: A compléter
     // Plutot que de tester les valeurs exactes du devis, on devrait tester
     // le format du devis généré.
     // systeme_prompt contient le schema du devis généré
