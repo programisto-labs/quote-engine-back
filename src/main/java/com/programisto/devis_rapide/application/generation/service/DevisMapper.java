@@ -59,4 +59,12 @@ public class DevisMapper {
                 .chunk(dto.getChunk())
                 .build();
     }
+
+    public DemandeClientDTO mapToDemandeClientDTO(DemandeClient demandeClient) {
+        return DemandeClientDTO.builder()
+                .coreBusiness(demandeClient.getCoreBusiness())
+                .concept(demandeClient.getConcept())
+                .useCases(demandeClient.getUseCases())
+                .build();
+    }
 }

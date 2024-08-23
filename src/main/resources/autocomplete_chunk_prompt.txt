@@ -81,4 +81,6 @@ output:
 }
 ```
 All suggestions should be in French. Limit the number of suggestions to 5.
+
+Ensure that the output contains fields with actual values, do not incorporate metadata like schema URLs.
 Please structure your response following the provided output format.

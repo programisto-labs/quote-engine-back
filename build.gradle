@@ -47,7 +47,7 @@ dependencies {
 
 	// hibernate validator et toutes ses dépendances nécessaires pour valider les contraintes sur les beans
 	
-	
+ 	implementation("com.google.guava:guava:33.3.0-jre")	
 	implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.2'  
 	runtimeOnly('com.h2database:h2')
 	

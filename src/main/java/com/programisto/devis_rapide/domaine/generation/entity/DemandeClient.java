@@ -19,6 +19,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.With;
 
 @Getter
 @JsonDeserialize(builder = DemandeClient.DemandeClientBuilder.class)
@@ -34,6 +35,7 @@ public class DemandeClient {
 
     @NotEmpty(message = "Le champ use_cases est obligatoire")
     @JsonProperty(value = "useCases", required = true)
+    @With
     private List<String> useCases;
 
     @Builder

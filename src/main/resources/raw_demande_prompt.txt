@@ -1,0 +1,64 @@
+
+You are tasked with generating a comprehensive object that describes a software project.
+
+Analyze the provided project description to extract all relevant details, and organize them into a structured format to support a precise and detailed quotation.
+
+The input is a textual description of the software project requirements. The data is a raw dump of a pdf file, and it may lack structure or clarity.
+Break down the input into the following components:
+- **Core Business Area:** Identify the main business domain or industry the project is focused on.
+- **Application Concept:** Define the overall concept or primary function of the software application.
+- **Use Cases:**
+   - Extract and list all use cases. Each use case should:
+     - Be a brief, clear, and concise description of a specific function or goal the software must achieve.
+     - Begin with one of the following approved verbs, at the third person singular form, in the infinitive mood (base form): Ajouter, Effacer, Fermer, Copier, Entrer, Sortir, Trouver, Formater, Obtenir, Cacher, Joindre, Verrouiller, Déplacer, Nouveau, Ouvrir, Extraire, Pousser, Supprimer, Renommer, Réinitialiser, Redimensionner, Sélectionner, Définir, Montrer, Démarrer, Arrêter, Suspendre, Déverrouiller, Mettre à jour, Utiliser, Attendre, Écrire, Exporter, Importer, Invoquer, Créer, Sortie, Lire, Recevoir, Envoyer, Commencer, Compléter, Déboguer, Désactiver, Activer, Installer, Désinstaller, Enregistrer, Désenregistrer, Tester, Utiliser, Monter, Démonter, Sauvegarder, Restaurer, Optimiser, Compresser, Étendre, Résoudre.
+     - If the input description is vague or lacks detail, generate plausible use cases based on the context to ensure a robust project structure.
+     - Ensure that each use case is rendered in simple sentences. Split into multiple sentences if needed to clarify the functionality.
+
+
+The JSON schema should always be consistent and follow this structure:
+```json
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "coreBusiness": {
+            "type": "string",
+            "description": "The primary industry or business domain"
+        },
+        "concept": {
+            "type": "string",
+            "description": "The core idea or function of the software"
+        },
+        "useCases": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "description": "A brief description of a specific function or user scenario"
+            }
+        }
+    },
+    "required": ["coreBusiness", "concept", "useCases"]
+}
+```
+
+All extracted information and the JSON output should be in French.
+
+Do not omit any relevant information.
+Ensure the extracted data is precise, accurate, and complete.
+The final JSON output must be well-structured, accurate, and provide a comprehensive overview of the project’s scope and requirements.
+
+
+Here is an example of how the output should look:
+```json
+{
+    "coreBusiness": "Commerce électronique",
+    "concept": "Plateforme de gestion de commande en ligne",
+    "useCases": [
+        "Ajoute un produit au panier",
+    ]
+}
+```
+
+Ensure that the output contains fields with actual values, do not incorporate metadata like schema URLs.
+Ensure that the output is detailed, structured, and accurately reflects the project’s scope.
+Please structure your response following the provided output format.

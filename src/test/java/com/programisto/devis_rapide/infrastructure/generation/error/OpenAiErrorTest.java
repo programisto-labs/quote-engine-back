@@ -10,7 +10,7 @@ class OpenAiErrorTest {
     @Test
     void testConstructor() {
         String errorMessage = "Test error message";
-        OpenAiError error = new OpenAiError(errorMessage);
+        OpenAiError error = new OpenAiError(errorMessage, null);
 
         assertEquals(errorMessage, error.getMessage());
     }
@@ -18,7 +18,7 @@ class OpenAiErrorTest {
     @Test
     void testInheritance() {
         String errorMessage = "Test error message";
-        OpenAiError error = new OpenAiError(errorMessage);
+        OpenAiError error = new OpenAiError(errorMessage, null);
 
         assertThat(error).isInstanceOf(RuntimeException.class);
     }

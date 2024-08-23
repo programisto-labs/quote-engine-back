@@ -61,4 +61,6 @@ Here is an example of how the output should look:
 }
 ```
 All suggestions should be in French.
+
+Ensure that the output contains fields with actual values, do not incorporate metadata like schema URLs.
 Please structure your response following the provided output format.

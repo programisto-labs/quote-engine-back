@@ -29,91 +29,65 @@ public class PromptService {
     //
     ////////////////////////////////////////////////////////////////
 
+    private static final String PROMPT_FOLDER = "src/main/resources";
+
     private PromptService() {
+    }
+
+    public enum PromptFile {
+        SYSTEM_PROMPT(PROMPT_FOLDER + "/system_prompt.txt"),
+        AUTOCOMPLETE_PROMPT(PROMPT_FOLDER + "/autocomplete_prompt.txt"),
+        RAW_DEMANDE_PROMPT(PROMPT_FOLDER + "/raw_demande_prompt.txt"),
+        AUTOCOMPLETE_CHUNK_PROMPT(PROMPT_FOLDER + "/autocomplete_chunk_prompt.txt");
+
+        private final String filePath;
+
+        PromptFile(String filePath) {
+            this.filePath = filePath;
+        }
+
+        public String getFilePath() {
+            return filePath;
+        }
     }
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    private String getSystemText() {
+    private String readPromptFile(PromptFile promptFile) {
         StringBuilder data = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/main/resources/system_prompt.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(promptFile.getFilePath()))) {
             String line;
             while ((line = br.readLine()) != null) {
                 data.append(line);
             }
         } catch (IOException e) {
-            throw new OpenAiError("Error while reading system prompt");
+            throw new OpenAiError("Error while reading prompt file", e);
         }
         return data.toString();
-    }
-
-    private String getSuggestionsText() {
-        StringBuilder data = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader("src/main/resources/autocomplete_prompt.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                data.append(line);
-            }
-        } catch (IOException e) {
-            throw new OpenAiError("Error while reading system prompt");
-        }
-        return data.toString();
-    }
-
-    private String getSuggestionsTextFromChunk() {
-        StringBuilder data = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(
-                new FileReader("src/main/resources/autocomplete_chunk_prompt.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                data.append(line);
-            }
-        } catch (IOException e) {
-            throw new OpenAiError("Error while reading system prompt");
-        }
-        return data.toString();
-    }
-
-    private PromptTemplate getUserPromptTemplate() {
-        String userText = """
-                ```json
-                {clientRequest}
-                ```
-                """;
-        return new PromptTemplate(userText);
-    }
-
-    private Prompt getUserPrompt(DemandeClient demandeClient) {
-        return getUserPromptTemplate().create(Map.of("clientRequest", DemandeClient.toJson(demandeClient)));
-    }
-
-    private UserMessage getUserMessage(DemandeClient demandeClient) {
-        return new UserMessage(getUserPrompt(demandeClient).getContents());
-    }
-
-    private SystemMessage getSystemMessage() {
-        return new SystemMessage(getSystemText());
-    }
-
-    private SystemMessage getSuggestionsMessage() {
-        return new SystemMessage(getSuggestionsText());
-    }
-
-    private SystemMessage getSuggestionsMessageFromChunk() {
-        return new SystemMessage(getSuggestionsTextFromChunk());
     }
 
     public Prompt getDevisFromDemandeClientPrompt(DemandeClient demandeClient) {
-        return new Prompt(List.of(getSystemMessage(), getUserMessage(demandeClient)));
+        return new Prompt(List.of(
+                new SystemMessage(readPromptFile(PromptFile.SYSTEM_PROMPT)),
+                new UserMessage(DemandeClient.toJson(demandeClient))));
     }
 
     public Prompt getSuggestionsFromDemandeClientPrompt(DemandeClient demandeClient) {
-        return new Prompt(List.of(getSuggestionsMessage(), getUserMessage(demandeClient)));
+        return new Prompt(List.of(
+                new SystemMessage(readPromptFile(PromptFile.AUTOCOMPLETE_PROMPT)),
+                new UserMessage(DemandeClient.toJson(demandeClient))));
     }
 
     public Prompt getSuggestionsFromScenarioChunkPrompt(ScenarioChunk scenarioChunk) {
-        return new Prompt(
-                List.of(getSuggestionsMessageFromChunk(), new UserMessage(ScenarioChunk.toJson(scenarioChunk))));
+        return new Prompt(List.of(
+                new SystemMessage(readPromptFile(PromptFile.AUTOCOMPLETE_CHUNK_PROMPT)),
+                new UserMessage(ScenarioChunk.toJson(scenarioChunk))));
+    }
+
+    public Prompt getDemandeFromRawDemandePrompt(String rawDemande) {
+        return new Prompt(List.of(
+                new SystemMessage(readPromptFile(PromptFile.RAW_DEMANDE_PROMPT)),
+                new UserMessage(rawDemande)));
     }
 
 }

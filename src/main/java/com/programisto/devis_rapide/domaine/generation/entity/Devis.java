@@ -65,6 +65,11 @@ public class Devis {
         }
     }
 
+    public static Devis merge(Devis devis1, Devis devis2) {
+        devis1.modules.addAll(devis2.modules);
+        return devis1;
+    }
+
     @JsonPOJOBuilder(withPrefix = "")
     public static class DevisBuilder {
         @JsonProperty("name")

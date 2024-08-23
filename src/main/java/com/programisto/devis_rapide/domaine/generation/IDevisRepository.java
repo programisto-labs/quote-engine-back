@@ -13,4 +13,6 @@ public interface IDevisRepository {
     Autocomplete autocomplete(DemandeClient demandeClient);
 
     Autocomplete inlineAutocomplete(ScenarioChunk entity);
+
+    DemandeClient extractDemande(String entity);
 }
