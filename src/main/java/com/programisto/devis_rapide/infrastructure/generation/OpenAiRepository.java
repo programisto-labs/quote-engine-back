@@ -9,16 +9,20 @@ import com.programisto.devis_rapide.domaine.generation.entity.Autocomplete;
 import com.programisto.devis_rapide.domaine.generation.entity.DemandeClient;
 import com.programisto.devis_rapide.domaine.generation.entity.Devis;
 import com.programisto.devis_rapide.domaine.generation.entity.ScenarioChunk;
+import com.programisto.devis_rapide.infrastructure.generation.service.GenerationService;
 import com.programisto.devis_rapide.infrastructure.generation.service.PromptService;
 
 @Component
 public class OpenAiRepository implements IDevisRepository {
     private final ChatModel chatModel;
     private PromptService promptService;
+    private GenerationService generationService;
+    private static final int CHUNK_SIZE = 20;
 
-    OpenAiRepository(PromptService promptService, ChatModel chatModel) {
+    OpenAiRepository(PromptService promptService, ChatModel chatModel, GenerationService generationService) {
         this.promptService = promptService;
         this.chatModel = chatModel;
+        this.generationService = generationService;
     }
 
     private String getGenerations(DemandeClient demandeClient) {
@@ -28,7 +32,12 @@ public class OpenAiRepository implements IDevisRepository {
 
     @Override
     public Devis genere(DemandeClient demandeClient) {
-        return Devis.fromJson(getGenerations(demandeClient));
+        if (demandeClient.getUseCases().size() > CHUNK_SIZE) {
+            return generationService.chunk(demandeClient, CHUNK_SIZE).stream()
+                    .map(chunk -> Devis.fromJson(getGenerations(chunk))).reduce(Devis::merge).orElseThrow();
+        } else {
+            return Devis.fromJson(getGenerations(demandeClient));
+        }
     }
 
     private String getSuggestions(DemandeClient demandeClient) {
