@@ -3,6 +3,7 @@ Your goal is to provide a clear and detailed breakdown of a fully operational pr
 You want to provide a more accurate estimate and a better project structure.
 
 The input will include a core business area, an application concept, and a series of use cases.
+If the input includes a modules array, you can use it as a starting point for the project structure, theses modules are already part of the project.
 Each use case is a simple string describing its goal.
 
 Here is the schema of the input:
@@ -16,6 +17,12 @@ Here is the schema of the input:
         },
         "concept": {
             "type": "string"
+        },
+        "modules": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         },
         "useCases": {
             "type": "array",

@@ -38,8 +38,11 @@ public class DemandeClient {
     @With
     private List<String> useCases;
 
+    @JsonProperty(value = "modules", required = false)
+    private List<String> modules;
+
     @Builder
-    private DemandeClient(String coreBusiness, String concept, List<String> useCases) {
+    private DemandeClient(String coreBusiness, String concept, List<String> useCases, List<String> modules) {
         this.coreBusiness = coreBusiness;
         this.concept = concept;
         this.useCases = useCases;
@@ -53,6 +56,7 @@ public class DemandeClient {
         private String coreBusiness;
         private String concept;
         private List<String> useCases;
+        private List<String> modules;
 
         private void validate(DemandeClient devis) {
             Set<ConstraintViolation<DemandeClient>> violations = validator.validate(devis);
@@ -66,7 +70,7 @@ public class DemandeClient {
         }
 
         public DemandeClient build() {
-            DemandeClient devis = new DemandeClient(coreBusiness, concept, useCases);
+            DemandeClient devis = new DemandeClient(coreBusiness, concept, useCases, modules);
             validate(devis);
             return devis;
         }
@@ -83,6 +87,11 @@ public class DemandeClient {
 
         public DemandeClientBuilder useCases(List<String> useCases) {
             this.useCases = useCases;
+            return this;
+        }
+
+        public DemandeClientBuilder modules(List<String> modules) {
+            this.modules = modules;
             return this;
         }
     }

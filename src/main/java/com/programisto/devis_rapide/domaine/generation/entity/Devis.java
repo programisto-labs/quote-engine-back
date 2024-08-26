@@ -65,9 +65,16 @@ public class Devis {
         }
     }
 
-    public static Devis merge(Devis devis1, Devis devis2) {
-        devis1.modules.addAll(devis2.modules);
-        return devis1;
+    public static Devis merge(Devis finalDevis, Devis newDevis) {
+        newDevis.modules.forEach(module -> finalDevis.modules.stream()
+                .filter(existingModule -> existingModule.getNom().toLowerCase().equals(module.getNom().toLowerCase()))
+                .findFirst()
+                .ifPresentOrElse(
+                        existingModule -> existingModule.getScenarios().addAll(module.getScenarios()),
+                        () -> finalDevis.modules.add(module))
+
+        );
+        return finalDevis;
     }
 
     @JsonPOJOBuilder(withPrefix = "")
