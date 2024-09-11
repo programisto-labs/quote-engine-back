@@ -39,3 +39,6 @@ out/
 
 ### Env Dev ###
 src/main/resources/application.properties.prod
+
+### Devis logs ###
+devis_back.log*

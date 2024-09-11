@@ -15,8 +15,8 @@ import com.programisto.devis_rapide.infrastructure.generation.service.PromptServ
 @Component
 public class OpenAiRepository implements IDevisRepository {
     private final ChatModel chatModel;
-    private PromptService promptService;
-    private GenerationService generationService;
+    private final PromptService promptService;
+    private final GenerationService generationService;
     private static final int CHUNK_SIZE = 20;
 
     OpenAiRepository(PromptService promptService, ChatModel chatModel, GenerationService generationService) {

@@ -49,7 +49,7 @@ public class Autocomplete {
 
     public static Autocomplete fromJson(String json) {
         if (json == null) {
-            throw new JsonToObjectConversionException(json, new NullPointerException());
+            throw new JsonToObjectConversionException("Autocomplete", new NullPointerException());
         }
         try {
             return (new ObjectMapper()).readValue(json, Autocomplete.class);

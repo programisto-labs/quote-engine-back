@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/devis")
 @CrossOrigin(origins = "*")
 public class DevisController {
-    private DevisMapper mapper;
-    private DevisService service;
+    private final DevisMapper mapper;
+    private final DevisService service;
 
     DevisController(DevisMapper mapper, DevisService service) {
         this.mapper = mapper;
