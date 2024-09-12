@@ -22,7 +22,7 @@ class DevisTest {
         return Devis.builder().nom("Sample Devis").modules(List.of(sampleModule)).build();
     }
 
-    private static final String SAMPLE_DEVIS_JSON = "{\"modules\":[{\"name\":\"Module 1\",\"useCases\":[{\"name\":\"foo\",\"complexity\":\"medium\",\"durationInDays\":1.0}]}],\"name\":\"Sample Devis\"}";
+    private static final String SAMPLE_DEVIS_JSON = "{\"modules\":[{\"nom\":\"Module 1\",\"scenarios\":[{\"nom\":\"foo\",\"complexite\":\"medium\",\"duree\":1.0}]}],\"nom\":\"Sample Devis\"}";
 
     @Test
     void toJson() {
@@ -34,7 +34,7 @@ class DevisTest {
                 .isNotNull()
                 .isNotEmpty()
                 .matches("\\{.*\\}")
-                .matches(".*\"name\":\"Sample Devis\".*")
+                .matches(".*\"nom\":\"Sample Devis\".*")
                 .matches(".*\"modules\":\\[\\{.*\\}\\].*");
     }
 

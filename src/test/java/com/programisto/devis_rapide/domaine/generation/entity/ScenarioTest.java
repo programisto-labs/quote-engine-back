@@ -15,8 +15,8 @@ class ScenarioTest {
             .complexite("medium")
             .duree(5.0)
             .build();
-    public static final String SIMPLE_JSON_SCENARIO = "{\"name\":\"Accès aux documents\",\"complexity\":\"medium\",\"durationInDays\":5.0}";
-    private static final String INVALID_COMPLEXITY_JSON_SCENARIO = "{\"name\":\"Accès aux documents\",\"complexity\":\"invalid\",\"durationInDays\":5.0}";
+    public static final String SIMPLE_JSON_SCENARIO = "{\"nom\":\"Accès aux documents\",\"complexite\":\"medium\",\"duree\":5.0}";
+    private static final String INVALID_COMPLEXITY_JSON_SCENARIO = "{\"nom\":\"Accès aux documents\",\"complexite\":\"invalid\",\"duree\":5.0}";
 
     @Test
     void toJson() {
@@ -65,7 +65,7 @@ class ScenarioTest {
         assertThat(json)
                 .isNotNull()
                 .isNotEmpty()
-                .isEqualTo("{\"name\":\"Test scenario\",\"complexity\":\"high\",\"durationInDays\":7.5}");
+                .isEqualTo("{\"nom\":\"Test scenario\",\"complexite\":\"high\",\"duree\":7.5}");
     }
 
     @Test

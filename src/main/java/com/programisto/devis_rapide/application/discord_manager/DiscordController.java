@@ -18,7 +18,7 @@ public class DiscordController {
     @PostMapping("/send")
     public void sendMessage(@RequestBody MessageRequest request) {
         discordService.sendMessage(request.getChannelId(), request.getMessage()).subscribe(
-                null, //value -> System.out.println("Message sent: " + value),
+                null,
                 error -> System.err.println("Error sending message: " + error),
                 () -> System.out.println("Completed")
         );

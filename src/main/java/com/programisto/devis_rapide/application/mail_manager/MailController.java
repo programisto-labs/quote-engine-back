@@ -1,6 +1,7 @@
 package com.programisto.devis_rapide.application.mail_manager;
 
 
+import com.programisto.devis_rapide.application.mail_manager.entity.ClientEmailBody;
 import com.programisto.devis_rapide.application.mail_manager.entity.Email;
 import com.programisto.devis_rapide.application.mail_manager.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,8 @@ public class MailController {
     }
 
     @PostMapping("/toClient")
-    public void sendEmail(@RequestBody Email email) {
-            emailService.sendSalesNotificationEmail(email);
+    public void sendEmail(@RequestBody ClientEmailBody email) {
+            emailService.sendSalesNotificationEmail(new Email(email.to(), email.subject(), "emptyBody"));
+            emailService.sendClientQuoteEmail(email);
     }
 }

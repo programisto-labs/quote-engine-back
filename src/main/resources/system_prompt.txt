@@ -36,7 +36,7 @@ The JSON schema should always be consistent and follow this structure:
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
-        "name": {
+        "nom": {
             "type": "string"
         },
         "modules": {
@@ -44,35 +44,35 @@ The JSON schema should always be consistent and follow this structure:
             "items": {
                 "type": "object",
                 "properties": {
-                    "name": {
+                    "nom": {
                         "type": "string"
                     },
-                    "useCases": {
+                    "scenarios": {
                         "type": "array",
                         "items": {
                             "type": "object",
                             "properties": {
-                                "name": {
+                                "nom": {
                                     "type": "string"
                                 },
-                                "complexity": {
+                                "complexite": {
                                     "type": "string",
                                     "enum": ["low", "medium", "high"]
                                 },
-                                "durationInDays": {
+                                "duree": {
                                     "type": "integer",
                                     "minimum": 1
                                 }
                             },
-                            "required": ["name", "complexity", "durationInDays"]
+                            "required": ["nom", "complexite", "duree"]
                         }
                     }
                 },
-                "required": ["name", "useCases"]
+                "required": ["nom", "scenarios"]
             }
         }
     },
-    "required": ["modules", "name"]
+    "required": ["modules", "nom"]
 }
 ```
 
@@ -86,35 +86,35 @@ Here is an example of how the output should look:
 
 ```json
 {
-    "name": "User Management",
+    "nom": "User Management",
     "modules": [
         {
-            "name": "User Management",
-            "useCases": [
+            "nom": "User Management",
+            "scenarios": [
                 {
-                    "name": "User Access",
-                    "complexity": "medium",
-                    "durationInDays": 5
+                    "nom": "User Access",
+                    "complexite": "medium",
+                    "duree": 5
                 },
                 {
-                    "name": "User Permissions",
-                    "complexity": "high",
-                    "durationInDays": 7
+                    "nom": "User Permissions",
+                    "complexite": "high",
+                    "duree": 7
                 }
             ]
         },
         {
             "name": "Document Management",
-            "useCases": [
+            "scenarios": [
                 {
-                    "name": "Document Storage",
-                    "complexity": "low",
-                    "durationInDays": 3
+                    "nom": "Document Storage",
+                    "complexite": "low",
+                    "duree": 3
                 },
                 {
-                    "name": "Document Retrieval",
-                    "complexity": "medium",
-                    "durationInDays": 4
+                    "nom": "Document Retrieval",
+                    "complexite": "medium",
+                    "duree": 4
                 }
             ]
         }

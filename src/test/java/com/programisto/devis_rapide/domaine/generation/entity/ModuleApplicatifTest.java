@@ -60,7 +60,7 @@ class ModuleApplicatifTest {
     @Test
     void testFromJson() throws JsonToObjectConversionException {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("{\"name\":\"ModuleApplicatifTest\",\"useCases\":[");
+        stringBuilder.append("{\"nom\":\"ModuleApplicatifTest\",\"scenarios\":[");
         stringBuilder.append(Scenario.toJson(SCENARIO_1));
         stringBuilder.append(",");
         stringBuilder.append(Scenario.toJson(SCENARIO_2));

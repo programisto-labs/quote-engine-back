@@ -30,7 +30,7 @@ public class Devis {
 
     @NotBlank(message = "Le nom du devis ne doit pas être vide")
     @JsonAlias("nom")
-    @JsonProperty(value = "name", required = true)
+    @JsonProperty(value = "nom", required = true)
     private String nom;
 
     @NotEmpty(message = "La liste des modules est obligatoire")
@@ -70,9 +70,17 @@ public class Devis {
         return devis1;
     }
 
+    public int getModulesQuantity() {
+        return modules.size();
+    }
+
+    public double getTotalHours() {
+        return modules.stream().mapToDouble(ModuleApplicatif::getTotalHours).sum();
+    }
+
     @JsonPOJOBuilder(withPrefix = "")
     public static class DevisBuilder {
-        @JsonProperty("name")
+        @JsonProperty("nom")
         private String nom;
 
         @JsonProperty("modules")

@@ -30,12 +30,12 @@ public class ModuleApplicatif {
 
     @NotBlank(message = "Le nom du module applicatif ne doit pas être vide")
     @JsonAlias("nom")
-    @JsonProperty(value = "name", required = true)
+    @JsonProperty(value = "nom", required = true)
     private String nom;
 
     @NotEmpty(message = "Le champ useCases est obligatoire")
     @JsonAlias("scenarios")
-    @JsonProperty(value = "useCases", required = true)
+    @JsonProperty(value = "scenarios", required = true)
     private List<Scenario> scenarios;
 
     @Builder
@@ -66,14 +66,22 @@ public class ModuleApplicatif {
         }
     }
 
+    public int getTotalScenarios() {
+        return scenarios.size();
+    }
+
+    public double getTotalHours() {
+        return scenarios.stream().mapToDouble(Scenario::getDuree).sum();
+    }
+
     @JsonPOJOBuilder(withPrefix = "")
     public static class ModuleApplicatifBuilder {
         private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         private static final Validator validator = factory.getValidator();
-        @JsonProperty("name")
+        @JsonProperty("nom")
         private String nom;
 
-        @JsonProperty("useCases")
+        @JsonProperty("scenarios")
         private List<Scenario> scenarios;
 
         public ModuleApplicatifBuilder nom(String nom) {

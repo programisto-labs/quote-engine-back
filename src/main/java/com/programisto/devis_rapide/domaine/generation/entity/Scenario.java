@@ -32,21 +32,21 @@ public class Scenario {
     @With
     @NotBlank(message = "Le nom d'un scénario ne doit pas être vide.")
     @JsonAlias("nom")
-    @JsonProperty(value = "name", required = true)
+    @JsonProperty(value = "nom", required = true)
     private String nom;
 
     @With
     @Pattern(regexp = "^(low|medium|high)$", message = "La complexité d'un scénario doit être low, medium ou high.")
     @NotBlank(message = "La complexité d'un scénario doit être low, medium ou high.")
     @JsonAlias("complexite")
-    @JsonProperty(value = "complexity", required = true)
+    @JsonProperty(value = "complexite", required = true)
     private String complexite;
 
     @With
     @Min(value = 1, message = "La durée d'un scénario doit être comprise entre 1 et 10 jours.")
     @Max(value = 10, message = "La durée d'un scénario doit être comprise entre 1 et 10 jours.")
     @JsonAlias("duree")
-    @JsonProperty(value = "durationInDays", required = true)
+    @JsonProperty(value = "duree", required = true)
     private double duree;
 
     @Builder
@@ -80,13 +80,13 @@ public class Scenario {
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class ScenarioBuilder {
-        @JsonProperty("name")
+        @JsonProperty("nom")
         private String nom;
 
-        @JsonProperty("complexity")
+        @JsonProperty("complexite")
         private String complexite;
 
-        @JsonProperty("durationInDays")
+        @JsonProperty("duree")
         private double duree;
 
         public ScenarioBuilder nom(String nom) {

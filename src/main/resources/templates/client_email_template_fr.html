@@ -4,30 +4,469 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Quote Engine</title>
+    <style>
+        .info-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.1rem 0.25rem;
+            border-radius: 5px;
+            margin-left:1rem;
+            font-size:14px;
+            font-style:italic;
+            border:1px solid #262A29;
+            cursor:pointer;
+        }
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+        }
+        table { width: 100%; margin-bottom:1rem;}
+        .footer {
+            background-color: #262A29;
+            border-radius: 0 0 8px 8px;
+            height: 5rem;
+            color: #ccc;
+            display: flex;
+            justify-content: center;
+            font-size: 12px;
+            align-items: center;
+        }
+    </style>
 </head>
-<body style="font-family: Roboto, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+<body style="font-family: Roboto, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;line-height:2rem;">
 <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
     <div style="background-color: #262A29; color: #ffffff; padding: 10px; text-align: left; border-radius: 8px 8px 0 0;display: flex;
     align-items: center;">
         <img src="cid:logo" alt="Programisto" style="width: 176px !important;">
         <h1 style="margin: 0; font-size: 1.3rem;display:inline-block; margin-left: auto;
-    margin-right: 0;">Notification</h1>
+    margin-right: 0;">Devis rapide</h1>
     </div>
-    <div style="padding: 20px; text-align: left;">
-        <p>Cher/Ch&egrave;re <span th:text="${name}"></span>,</p>
-        <p>Nous sommes heureux de vous informer que l'action suivante a &eacute;t&eacute; r&eacute;alis&eacute;e dans notre application :</p>
-        <p><strong th:text="${action_name}"></strong></p>
-        <p>Pour v&eacute;rifier les d&eacute;tails de cette action, veuillez cliquer sur le lien suivant :</p>
-        <p><a th:href="${app_url}"
-              style="display: inline-block; padding: 10px 20px; background-color: #262A29; color: #ffffff; text-decoration: none; border-radius: 5px;">V&eacute;rifier
-            l'action</a></p>
-        <p>Si vous avez des questions ou avez besoin de plus d'informations, n'h&eacute;sitez pas &agrave; nous contacter.</p>
-        <p>Cordialement,</p>
-        <p>L'&eacute;quipe de support <strong>Quote Engine!</strong>
-    </div>
-    <div style="text-align: center; padding: 10px; font-size: 12px; color: #777777;">
-        <p>© 2024 Programisto. Tous droits r&eacute;serv&eacute;s.</p>
+
+    <table style="border: 1px solid #262A29;border-collapse: collapse;color: #262A29;margin-bottom:0;">
+        <!-- Main table header -->
+        <thead>
+            <tr>
+                <th colspan="2"><h3 th:text="${devis.nom}" style="margin: 0.5rem;text-align: start;"></h3></th>
+            </tr>
+        </thead>
+        <!-- Main table body -->
+        <tbody>
+        <tr>
+            <td colspan="2" style="padding: 0;">
+                <!--Table modules-->
+                <table>
+                    <thead>
+                    <tr>
+                        <td colspan="3">Fonctionnalit&eacute;es <i>(<span th:text="${devis.getModulesQuantity}"></span>
+                            sc&eacute;narios <span th:text="${devis.getTotalHours} "></span> jours)</i></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="module, iter : ${devis.getModules}">
+                        <td>
+                            <details>
+                                <summary style="cursor:pointer;">
+                                    <div style="display:inline-flex; width:40%"><span th:text="${module.nom}"
+                                                                                      style="width: 50%"></span></div>
+                                    <div class="info-button">
+                                        <span><span
+                                                th:text="${module.getTotalScenarios}"></span>&#32sc&eacute;narios</span>
+                                        <span class="material-icons" style="margin-left: 10px;">note</span>
+                                    </div>
+                                    <div class="info-button">
+                                        <span><span th:text="${module.getTotalHours}"></span>&#32jours</span>
+                                        <span class="material-icons" style="margin-left: 10px;">build</span>
+                                    </div>
+                                </summary>
+                                <div th:each="scenario, iter : ${module.getScenarios}"
+                                     style="display: flex;width:100%;">
+                                    <div style="display: inline-flex; width:70%;align-items: center;">
+                                        <span class="material-icons" style="margin-left: 10px;">note</span><span
+                                            th:text="${scenario.nom}" style="margin-left:1rem;"></span>
+                                    </div>
+                                    <div style="display: inline-flex; width: 30%;justify-content:right;margin-right:1rem;">
+                                        <i><em th:text="${scenario.duree}"></em>&#32jours</i>
+                                    </div>
+                                </div>
+                            </details>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!--/div-->
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <!--div class="table-wrapper"-->
+                <table>
+                    <thead>
+                    <tr>
+                        <th colspan="3">
+                            <h3 style="margin: 0.5rem;text-align: start;">Projet</h3>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <details>
+                                <summary style="cursor:pointer;">
+                                    <div style="display:inline-flex; width:40%">
+                                        <span class="material-icons" style="margin-left: 10px;">build</span>
+                                        <span style="width: 50%;margin-left:1rem;">Conception</span>
+                                    </div>
+                                    <div class="info-button">
+                                        <span><span
+                                                th:text="${#numbers.formatDecimal(projet.conception.getTotalCouts, 1, 2)}"></span>&#32&euro;</span>
+                                        <span class="material-icons" style="margin-left: 10px;">note</span>
+                                    </div>
+                                    <div class="info-button">
+                                        <span><span
+                                                th:text="${#numbers.formatDecimal(projet.conception.getTotalJours, 1, 2)}"></span>&#32jours</span>
+                                        <span class="material-icons" style="margin-left: 10px;">build</span>
+                                    </div>
+                                </summary>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">search</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>&Eacute;tude du besoin</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.conception.etude.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.conception.etude.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">extension</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Conception fonctionnelle</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.conception.conceptionFonctionnelle.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.conception.conceptionFonctionnelle.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">engineering</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Conception technique</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.conception.conceptionTechnique.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.conception.conceptionTechnique.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">assignment</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Conception cahier de test</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.conception.conceptionCahierDeTests.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.conception.conceptionCahierDeTests.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                            </details>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <details>
+                                <summary style="cursor:pointer;">
+                                    <div style="display:inline-flex; width:40%">
+                                        <span class="material-icons" style="margin-left: 10px;">construction</span>
+                                        <span style="width: 50%;margin-left:1rem;">Construction</span>
+                                    </div>
+                                    <div class="info-button">
+                                        <span><span
+                                                th:text="${#numbers.formatDecimal(projet.construction.getTotalCouts, 1, 2)}"></span>&#32&euro;</span>
+                                        <span class="material-icons" style="margin-left: 10px;">note</span>
+                                    </div>
+                                    <div class="info-button">
+                                        <span><span
+                                                th:text="${#numbers.formatDecimal(projet.construction.getTotalJours(), 1, 2)}"></span>&#32jours</span>
+                                        <span class="material-icons" style="margin-left: 10px;">build</span>
+                                    </div>
+                                </summary>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">play_arrow</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Initialisation du projet</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.construction.initialisation.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.construction.initialisation.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">code</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>D&eacute;veloppements et tests unitaires</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.construction.developementAvecTests.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.construction.developementAvecTests.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">check_circle</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Relecture et validation du code</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.construction.relecture.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.construction.relecture.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">support</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Support technique</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.construction.supportTechnique.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.construction.supportTechnique.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">help</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Support fonctionnel</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.construction.supportFonctionnel.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.construction.supportFonctionnel.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">timeline</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Suivi de projet</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.construction.suiviDeProjet.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.construction.suiviDeProjet.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                            </details>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <details>
+                                <summary style="cursor:pointer;">
+                                    <div style="display:inline-flex; width:40%">
+                                        <span class="material-icons"
+                                              style="margin-left: 10px;">assignment_turned_in</span>
+                                        <span style="width: 50%;margin-left:1rem;">Recette</span>
+                                    </div>
+                                    <div class="info-button">
+                                        <span><span
+                                                th:text="${#numbers.formatDecimal(projet.recette.getTotalCouts, 1, 2)}"></span>&#32&euro;</span>
+                                        <span class="material-icons" style="margin-left: 10px;">note</span>
+                                    </div>
+                                    <div class="info-button">
+                                        <span><span
+                                                th:text="${#numbers.formatDecimal(projet.recette.getTotalJours, 1, 2)}"></span>&#32jours</span>
+                                        <span class="material-icons" style="margin-left: 10px;">build</span>
+                                    </div>
+                                </summary>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">local_shipping</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Livraison de la recette</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.recette.livraisonRecette.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.recette.livraisonRecette.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">bug_report</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Tests de recette</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.recette.tests.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.recette.tests.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">build_circle</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Corrections bugs</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.recette.corrections.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.recette.corrections.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">verified</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Relecture et validation de la recette</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.recette.relecture.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.recette.relecture.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">contact_phone</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Support technique de la recette</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.recette.supportTechnique.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.recette.supportTechnique.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                            </details>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <details>
+                                <summary style="cursor:pointer;">
+                                    <div style="display:inline-flex; width:40%">
+                                        <span class="material-icons" style="margin-left: 10px;">send</span>
+                                        <span style="width: 50%;margin-left:1rem;">Livraison</span>
+                                    </div>
+                                    <div class="info-button">
+                                        <span><span
+                                                th:text="${#numbers.formatDecimal(projet.livraison.getTotalCouts, 1, 2)}"></span>&#32&euro;</span>
+                                        <span class="material-icons" style="margin-left: 10px;">note</span>
+                                    </div>
+                                    <div class="info-button">
+                                        <span><span
+                                                th:text="${#numbers.formatDecimal(projet.livraison.getTotalJours, 1, 2)}"></span>&#32jours</span>
+                                        <span class="material-icons" style="margin-left: 10px;">build</span>
+                                    </div>
+                                </summary>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">description</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Rédaction DMFX</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.livraison.redactionDMFX.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.livraison.redactionDMFX.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">publish</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Livraison production</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.livraison.livraison.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.livraison.livraison.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">support_agent</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Accompagement livraison</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.livraison.accompagnement.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.livraison.accompagnement.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <span class="material-icons" style="margin-right: 10px;">security</span>
+                                    <div style="flex-grow: 1;line-height: 1.2rem;margin-top: 0.5rem;">
+                                        <div>Garantie</div>
+                                        <div style="color: #555;"><span
+                                                th:text="${#numbers.formatDecimal(projet.livraison.garantie.jours, 1, 2)}"></span>&#32;jours.
+                                        </div>
+                                    </div>
+                                    <div>&euro;&#32;<span
+                                            th:text="${#numbers.formatDecimal(projet.livraison.garantie.couts, 1, 2)}"></span>
+                                    </div>
+                                </div>
+                            </details>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!--/div-->
+            </td>
+        </tr>
+        </tbody>
+
+        <!-- Pie de la tabla principal -->
+        <tfoot>
+        <tr>
+            <td>
+                <div style="display: flex;width:100%;border-top:1px solid #262A29">
+                    <h3 style="margin: 0.5rem;text-align: start;">Total</h3>
+                </div>
+                <div style="display: flex;width:100%;">
+                    <div style="display: inline-flex; width:70%;align-items: center;">
+                        <span class="material-icons" style="margin-left: 10px;">monetization_on</span>
+                        <span style="margin-left:1rem;">Co&ucirc;t total</span>
+                    </div>
+                    <div style="display: inline-flex; width: 30%;justify-content:right;margin-right:1rem;">
+                        <span><span th:text="${#numbers.formatDecimal(projet.getTotalCouts, 1, 2)}"></span>&#32;&euro;</span>
+                    </div>
+                </div>
+                <div style="display: flex;width:100%;">
+                    <div style="display: inline-flex; width:70%;align-items: center;">
+                        <span class="material-icons" style="margin-left: 10px;">calendar_today</span>
+                        <span style="margin-left:1rem;">Dur&eacute;e totale</span>
+                    </div>
+                    <div style="display: inline-flex; width: 30%;justify-content:right;margin-right:1rem;">
+                        <span><span th:text="${#numbers.formatDecimal(projet.getTotalJours, 1, 2)}"></span>&#32;jours</span>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+    <div class="footer">
+        <p style="display:flex;">© 2024 Programisto. Tous droits r&eacute;serv&eacute;s.</p>
     </div>
 </div>
 </body>
