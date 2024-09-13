@@ -49,7 +49,7 @@
         <!-- Main table header -->
         <thead>
             <tr>
-                <th colspan="2"><h3 th:text="${devis.nom}" style="margin: 0.5rem;text-align: start;"></h3></th>
+                <th colspan="2"><h3 th:utext="${devis.nom}" style="margin: 0.5rem;text-align: start;"></h3></th>
             </tr>
         </thead>
         <!-- Main table body -->
@@ -69,7 +69,7 @@
                         <td>
                             <details>
                                 <summary style="cursor:pointer;">
-                                    <div style="display:inline-flex; width:40%"><span th:text="${module.nom}"
+                                    <div style="display:inline-flex; width:40%"><span th:utext="${module.nom}"
                                                                                       style="width: 50%"></span></div>
                                     <div class="info-button">
                                         <span><span
@@ -85,7 +85,7 @@
                                      style="display: flex;width:100%;">
                                     <div style="display: inline-flex; width:70%;align-items: center;">
                                         <span class="material-icons" style="margin-left: 10px;">note</span><span
-                                            th:text="${scenario.nom}" style="margin-left:1rem;"></span>
+                                            th:utext="${scenario.nom}" style="margin-left:1rem;"></span>
                                     </div>
                                     <div style="display: inline-flex; width: 30%;justify-content:right;margin-right:1rem;">
                                         <i><em th:text="${scenario.duree}"></em>&#32jours</i>
