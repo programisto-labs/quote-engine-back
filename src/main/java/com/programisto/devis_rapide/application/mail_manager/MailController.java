@@ -10,16 +10,20 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/devis/mail")
 public class MailController {
+    @Autowired
     private final EmailService emailService;
 
-    @Autowired
     public MailController(EmailService emailService) {
         this.emailService = emailService;
     }
 
     @PostMapping("/toClient")
-    public void sendEmail(@RequestBody ClientEmailBody email) {
-            emailService.sendSalesNotificationEmail(new Email(email.to(), email.subject(), "emptyBody"));
+    public void sendToClient(@RequestBody ClientEmailBody email) {
             emailService.sendClientQuoteEmail(email);
+    }
+
+    @PostMapping("/toSales")
+    public void sendToSales(@RequestBody Email email) {
+        emailService.sendSalesNotificationEmail(email);
     }
 }

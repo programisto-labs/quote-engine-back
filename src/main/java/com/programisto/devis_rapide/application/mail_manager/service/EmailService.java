@@ -20,6 +20,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.io.IOException;
+import java.util.Locale;
 
 @Service
 public class EmailService {
@@ -38,6 +39,7 @@ public class EmailService {
     @Autowired
     private ResourceLoader resourceLoader;
 
+
     @Value("${app.url}")
     String appUrl;
 
@@ -55,14 +57,15 @@ public class EmailService {
             MimeMessage message = getMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
             helper.setPriority(1);
-            helper.setFrom("devis.rapide@programisto.fr");
+            helper.setFrom("aramis.stalin@outlook.com");
             helper.setTo(salesEmailAddress);
-            helper.setSubject("Prospect envoyé quote");
+            helper.setSubject(email.getSubject());
 
-            Context context = new Context();
+            Context context = new Context(Locale.FRANCE);
+            context.setVariable("htmlUtils", new HtmlHelper());
             context.setVariable("name", "Sales team");
             context.setVariable("app_url", appUrl);
-            context.setVariable("action_name", "Le prospect " + (email.to()) + " s'est envoyé le projet à sa adresse e-mail.");
+            context.setVariable("action_name", email.getBody());
             context.setVariable("image", getContentId(LOGO));
             String text = templateEngine.process(SALES_EMAIL_TEMPLATE_FR, context);
 
@@ -92,13 +95,14 @@ public class EmailService {
             MimeMessage message = getMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
             helper.setPriority(1);
-            helper.setFrom("devis.rapide@programisto.fr");
-            helper.setTo(email.to());
-            helper.setSubject("Devis rapide");
+            helper.setFrom("aramis.stalin@outlook.com");
+            helper.setTo(email.getTo());
+            helper.setSubject(email.getSubject());
 
             Context context = new Context();
-            context.setVariable("devis", email.devis());
-            context.setVariable("projet", email.projet());
+            context.setVariable("htmlUtils", new HtmlHelper());
+            context.setVariable("devis", email.getDevis());
+            context.setVariable("projet", email.getProjet());
             context.setVariable("image", getContentId(LOGO));
             String text = templateEngine.process(CLIENT_EMAIL_TEMPLATE_FR, context);
 
