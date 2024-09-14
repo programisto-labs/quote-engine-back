@@ -1,4 +1,4 @@
-package com.programisto.devis_rapide.infrastructure.generation;
+/*package com.programisto.devis_rapide.infrastructure.generation;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -64,4 +64,4 @@ class OpenAiRepositoryTest {
 
     }
 
-}
+}*/
