@@ -43,8 +43,9 @@ public class EmailService {
     @Value("${app.url}")
     String appUrl;
 
-    @Value("${app.programisto.sales.email}")
-    String salesEmailAddress;
+    @Value("${spring.mail.username}")
+    String originEmailAddress;
+
 
     public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine) {
         this.mailSender = mailSender;
@@ -57,8 +58,8 @@ public class EmailService {
             MimeMessage message = getMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
             helper.setPriority(1);
-            helper.setFrom("aramis.stalin@outlook.com");
-            helper.setTo(salesEmailAddress);
+            helper.setFrom(originEmailAddress);
+            helper.setTo(email.getTo());
             helper.setSubject(email.getSubject());
 
             Context context = new Context(Locale.FRANCE);
