@@ -7,7 +7,7 @@ disk: 2048
 
 hooks:
     build: 
-      ./gradlew clean build --info
+      ./gradlew clean build
 
 web:
   commands: 
