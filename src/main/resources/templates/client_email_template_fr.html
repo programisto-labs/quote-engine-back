@@ -19,7 +19,7 @@
         <!-- Main table header -->
         <thead>
         <tr>
-            <th colspan="2"><h3 th:utext="${devis.nom}" style="margin: 0.5rem;text-align: start;"></h3></th>
+            <th colspan="2"><h3 th:utext="${htmlUtils.htmlEscape(devis.nom)}" style="margin: 0.5rem;text-align: start;"></h3></th>
         </tr>
         </thead>
         <!-- Main table body -->
