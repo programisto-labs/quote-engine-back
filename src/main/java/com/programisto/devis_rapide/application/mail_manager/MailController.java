@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/devis/mail")
+@RequestMapping("/devis")
 public class MailController {
     @Autowired
     private final EmailService emailService;
@@ -26,7 +26,7 @@ public class MailController {
         this.emailService = emailService;
     }
 
-    @PostMapping("/toClient")
+    @PostMapping("/mail/toClient")
     public ResponseEntity<HttpResponse> sendToClient(@RequestBody ClientEmailBody email) {
         System.out.println(email.getTo());
         System.out.println(email.getSubject());
@@ -55,7 +55,7 @@ public class MailController {
         }
     }
 
-    @PostMapping("/toSales")
+    @PostMapping("/mail/toSales")
     public ResponseEntity<HttpResponse>sendToSales(@RequestBody Email email) {
         try {
             validateEmailParams(email);

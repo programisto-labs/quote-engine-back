@@ -12,14 +12,9 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/devis/mail/*")
+        registry.addMapping("/devis/**")
                 .allowedOrigins(appUrl)
-                .allowedMethods("POST")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-        registry.addMapping("/devis/discord/*")
-                .allowedOrigins(appUrl)
-                .allowedMethods("POST")
+                .allowedMethods("GET", "POST")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
