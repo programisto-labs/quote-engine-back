@@ -3,15 +3,15 @@ package com.programisto.devis_rapide.application.mail_manager.service;
 import com.programisto.devis_rapide.application.mail_manager.entity.ClientEmailBody;
 import com.programisto.devis_rapide.application.mail_manager.entity.Email;
 import jakarta.activation.DataHandler;
-import jakarta.activation.DataSource;
-import jakarta.activation.FileDataSource;
 import jakarta.mail.BodyPart;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -20,6 +20,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 @Service
@@ -27,7 +28,7 @@ public class EmailService {
     public static final String UTF_8_ENCODING = "UTF-8";
     public static final String SALES_EMAIL_TEMPLATE_FR = "sales_email_template_fr.html";
     public static final String CLIENT_EMAIL_TEMPLATE_FR = "client_email_template_fr.html";
-    public static final String LOGO = "/static/images/programisto.webp";
+    public static final String LOGO = "/static/images/programisto.jpg";
     public static final String TEXT_HTML_ENCODING = "text/html";
 
     @Autowired
@@ -36,16 +37,11 @@ public class EmailService {
     @Autowired
     private final TemplateEngine templateEngine;
 
-    @Autowired
-    private ResourceLoader resourceLoader;
-
-
     @Value("${app.url}")
     String appUrl;
 
     @Value("${spring.mail.username}")
     String originEmailAddress;
-
 
     public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine) {
         this.mailSender = mailSender;
@@ -67,7 +63,6 @@ public class EmailService {
             context.setVariable("name", "Sales team");
             context.setVariable("app_url", appUrl);
             context.setVariable("action_name", email.getBody());
-            context.setVariable("image", getContentId(LOGO));
             String text = templateEngine.process(SALES_EMAIL_TEMPLATE_FR, context);
 
             MimeMultipart mimeMultipart = new MimeMultipart("related");
@@ -75,11 +70,7 @@ public class EmailService {
             messageBodyPart.setContent(text, TEXT_HTML_ENCODING);
             mimeMultipart.addBodyPart(messageBodyPart);
 
-            messageBodyPart = new MimeBodyPart();
-            DataSource dataSource = new FileDataSource( getResourcePath(LOGO) );
-            messageBodyPart.setDataHandler(new DataHandler(dataSource));
-            messageBodyPart.setHeader("Content-ID", "logo");
-            mimeMultipart.addBodyPart(messageBodyPart);
+            mimeMultipart.addBodyPart(logoBodyPart());
 
             message.setContent(mimeMultipart);
 
@@ -96,7 +87,7 @@ public class EmailService {
             MimeMessage message = getMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
             helper.setPriority(1);
-            helper.setFrom("aramis.stalin@outlook.com");
+            helper.setFrom(originEmailAddress);
             helper.setTo(email.getTo());
             helper.setSubject(email.getSubject());
 
@@ -104,7 +95,6 @@ public class EmailService {
             context.setVariable("htmlUtils", new HtmlHelper());
             context.setVariable("devis", email.getDevis());
             context.setVariable("projet", email.getProjet());
-            context.setVariable("image", getContentId(LOGO));
             String text = templateEngine.process(CLIENT_EMAIL_TEMPLATE_FR, context);
 
             MimeMultipart mimeMultipart = new MimeMultipart("related");
@@ -112,11 +102,7 @@ public class EmailService {
             messageBodyPart.setContent(text, TEXT_HTML_ENCODING);
             mimeMultipart.addBodyPart(messageBodyPart);
 
-            messageBodyPart = new MimeBodyPart();
-            DataSource dataSource = new FileDataSource( getResourcePath(LOGO) );
-            messageBodyPart.setDataHandler(new DataHandler(dataSource));
-            messageBodyPart.setHeader("Content-ID", "logo");
-            mimeMultipart.addBodyPart(messageBodyPart);
+            mimeMultipart.addBodyPart(logoBodyPart());
 
             message.setContent(mimeMultipart);
 
@@ -127,18 +113,18 @@ public class EmailService {
         }
     }
 
+    public MimeBodyPart logoBodyPart() throws MessagingException, IOException {
+        MimeBodyPart logoPart = new MimeBodyPart();
+        InputStream imageStream = new ClassPathResource(LOGO).getInputStream();
+
+        logoPart.setDataHandler(new DataHandler(new ByteArrayDataSource(imageStream, "image/jpg")));
+        logoPart.setFileName("programisto.jpg");
+        logoPart.setHeader("Content-ID", "logo");
+
+        return logoPart;
+    }
+
     private MimeMessage getMimeMessage() {
         return mailSender.createMimeMessage();
     }
-
-    private String getContentId(String name) {
-        return "<" + name + ">";
-    }
-
-    public String getResourcePath(String path) throws IOException {
-        return resourceLoader.getResource("classpath:" + path)
-                .getFile()
-                .getAbsolutePath();
-    }
-
 }
