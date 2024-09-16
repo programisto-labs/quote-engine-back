@@ -28,10 +28,6 @@ public class MailController {
 
     @PostMapping("/mail/toClient")
     public ResponseEntity<HttpResponse> sendToClient(@RequestBody ClientEmailBody email) {
-        System.out.println(email.getTo());
-        System.out.println(email.getSubject());
-        System.out.println(email.getDevis());
-        System.out.println(email.getProjet());
         try {
             validateClientEmailParams(email);
             emailService.sendClientQuoteEmail(email);
