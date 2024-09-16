@@ -15,13 +15,11 @@ import com.programisto.devis_rapide.domaine.generation.entity.Devis;
 import com.programisto.devis_rapide.domaine.generation.entity.ScenarioChunk;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/devis")
-@CrossOrigin(origins = "*")
 public class DevisController {
     private final DevisMapper mapper;
     private final DevisService service;
