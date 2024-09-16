@@ -50,8 +50,11 @@ public class DiscordController {
     }
 
     private void validateMessageParams(WebhookMessageRequest message) throws MissingRequestValueException {
-        if (!Util.isValid(message.getMessage())) {
-            throw new MissingRequestValueException("The message to send is required");
+        if (!Util.isValid(message.getContent())) {
+            throw new MissingRequestValueException("The content to send is required");
+        }
+        if (!Util.isValid(message.getEmbed())) {
+            throw new MissingRequestValueException("The data to send is required");
         }
     }
 }

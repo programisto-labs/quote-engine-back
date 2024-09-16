@@ -21,7 +21,8 @@ public class DiscordWebhookService implements com.programisto.devis_rapide.appli
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String json = String.format("{\"content\": \"%s\"}", content.getMessage());
+        String json = String.format("{\"content\": \"%s\",\"embeds\": [{\"title\": \"Donnes\",\"description\": \"%s\"}]}", content.getContent(), content.getEmbed());
+        System.out.println(json);
 
         HttpEntity<String> request = new HttpEntity<>(json, headers);
 
