@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 public class WebhookMessageRequest {
     String content;
-    String embed;
+    String embeds;
 }
