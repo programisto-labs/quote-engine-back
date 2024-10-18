@@ -84,6 +84,7 @@ public class Devis {
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class DevisBuilder {
+        @NotBlank(message = "Le nom du devis ne doit pas être vide")
         @JsonProperty("nom")
         private String nom;
 

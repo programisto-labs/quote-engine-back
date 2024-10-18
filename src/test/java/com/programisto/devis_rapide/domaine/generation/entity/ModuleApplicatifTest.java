@@ -37,7 +37,8 @@ class ModuleApplicatifTest {
 
     @Test
     void testModuleApplicatifBuilderWithValidation() {
-        assertThatThrownBy(ModuleApplicatif.builder().nom("")::build).isInstanceOf(ConstraintViolationException.class);
+        assertThatThrownBy(ModuleApplicatif.builder().nom("").scenarios(ModuleApplicatifTest.SCENARIOS)::build)
+                .isInstanceOf(ConstraintViolationException.class);
     }
 
     @Test

@@ -14,11 +14,11 @@ import java.util.Collections;
 import java.util.List;
 
 class DevisTest {
+    private static final Scenario sampleScenario = Scenario.builder().nom("foo").complexite("medium").duree(1).build();
+    private static final ModuleApplicatif sampleModule = ModuleApplicatif.builder().nom("Module 1").scenarios(List.of(sampleScenario))
+            .build();
 
     private static Devis getSampleDevis() {
-        Scenario sampleScenario = Scenario.builder().nom("foo").complexite("medium").duree(1).build();
-        ModuleApplicatif sampleModule = ModuleApplicatif.builder().nom("Module 1").scenarios(List.of(sampleScenario))
-                .build();
         return Devis.builder().nom("Sample Devis").modules(List.of(sampleModule)).build();
     }
 
@@ -65,7 +65,7 @@ class DevisTest {
         String emptyNom = "";
 
         // When
-        assertThatThrownBy(() -> Devis.builder().nom(emptyNom).build())
+        assertThatThrownBy(() -> Devis.builder().nom(emptyNom).modules(List.of(DevisTest.sampleModule)).build())
                 .isInstanceOf(ConstraintViolationException.class)
                 .hasMessageContaining("Le nom du devis ne doit pas être vide");
     }

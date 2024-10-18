@@ -3,11 +3,13 @@ package com.programisto.devis_rapide.domaine.generation.entity;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.programisto.devis_rapide.domaine.generation.error.JsonToObjectConversionException;
 import com.programisto.devis_rapide.domaine.generation.error.ObjectToJsonConversionException;
 
 import jakarta.validation.ConstraintViolation;
@@ -23,6 +25,7 @@ import lombok.With;
 
 @Getter
 @JsonDeserialize(builder = DemandeClient.DemandeClientBuilder.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DemandeClient {
 
     @NotBlank(message = "Le champ core_business est obligatoire")
@@ -45,14 +48,60 @@ public class DemandeClient {
         this.useCases = useCases;
     }
 
+    public static DemandeClient.DemandeClientBuilder builder() {
+        return new DemandeClient.DemandeClientBuilder();
+    }
+
+    public static String toJson(DemandeClient demandeClient) {
+        if (demandeClient == null) {
+            throw new ObjectToJsonConversionException("DemandeClient", new NullPointerException());
+        }
+        try {
+            return (new ObjectMapper()).writeValueAsString(demandeClient);
+        } catch (JsonProcessingException e) {
+            throw new ObjectToJsonConversionException("DemandeClient", e);
+        }
+    }
+
+    public static DemandeClient fromJson(String json) {
+        if (json == null) {
+            throw new JsonToObjectConversionException(json, new NullPointerException());
+        }
+        try {
+            return (new ObjectMapper()).readValue(json, DemandeClient.class);
+        } catch (JsonProcessingException e) {
+            throw new ObjectToJsonConversionException("DemandeClient", e);
+        }
+    }
+
     @JsonPOJOBuilder(withPrefix = "")
     public static class DemandeClientBuilder {
         private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         private static final Validator validator = factory.getValidator();
 
+        @JsonProperty("coreBusiness")
         private String coreBusiness;
+
+        @JsonProperty("concept")
         private String concept;
+
+        @JsonProperty("useCases")
         private List<String> useCases;
+
+        public DemandeClientBuilder coreBusiness(String coreBusiness) {
+            this.coreBusiness = coreBusiness;
+            return this;
+        }
+
+        public DemandeClientBuilder concept(String concept) {
+            this.concept = concept;
+            return this;
+        }
+
+        public DemandeClientBuilder useCases(List<String> useCases) {
+            this.useCases = useCases;
+            return this;
+        }
 
         private void validate(DemandeClient devis) {
             Set<ConstraintViolation<DemandeClient>> violations = validator.validate(devis);
@@ -70,36 +119,6 @@ public class DemandeClient {
             validate(devis);
             return devis;
         }
-
-        public DemandeClientBuilder coreBusiness(String coreBusiness) {
-            this.coreBusiness = coreBusiness;
-            return this;
-        }
-
-        public DemandeClientBuilder concept(String concept) {
-            this.concept = concept;
-            return this;
-        }
-
-        public DemandeClientBuilder useCases(List<String> useCases) {
-            this.useCases = useCases;
-            return this;
-        }
     }
 
-    public static String toJson(DemandeClient demandeClient) {
-        try {
-            return (new ObjectMapper()).writeValueAsString(demandeClient);
-        } catch (JsonProcessingException e) {
-            throw new ObjectToJsonConversionException("DemandeClient", e);
-        }
-    }
-
-    public static DemandeClient fromJson(String json) {
-        try {
-            return (new ObjectMapper()).readValue(json, DemandeClient.class);
-        } catch (JsonProcessingException e) {
-            throw new ObjectToJsonConversionException("DemandeClient", e);
-        }
-    }
 }
