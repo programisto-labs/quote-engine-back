@@ -1,130 +1,84 @@
 package com.programisto.devis_rapide.application.mail_manager.service;
 
-import com.programisto.devis_rapide.application.mail_manager.entity.ClientEmailBody;
-import com.programisto.devis_rapide.application.mail_manager.entity.Email;
-import jakarta.activation.DataHandler;
-import jakarta.mail.BodyPart;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeBodyPart;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimeMultipart;
-import jakarta.mail.util.ByteArrayDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mailjet.client.ClientOptions;
+import com.mailjet.client.MailjetClient;
+import com.mailjet.client.MailjetRequest;
+import com.mailjet.client.MailjetResponse;
+import com.mailjet.client.resource.Emailv31;
+import com.programisto.devis_rapide.application.mail_manager.entity.ClientEmailData;
+import com.programisto.devis_rapide.domaine.generation.entity.Devis;
+import com.programisto.devis_rapide.domaine.generation.entity.projet.Projet;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Locale;
 
 @Service
 public class EmailService {
-    public static final String UTF_8_ENCODING = "UTF-8";
-    public static final String SALES_EMAIL_TEMPLATE_FR = "sales_email_template_fr.html";
-    public static final String CLIENT_EMAIL_TEMPLATE_FR = "client_email_template_fr.html";
-    public static final String LOGO = "/static/images/programisto.jpg";
-    public static final String TEXT_HTML_ENCODING = "text/html";
 
-    @Autowired
-    private final JavaMailSender mailSender;
+    @Value("${mailjet.api.key}")
+    private String mailjetApiKey;
 
-    @Autowired
-    private final TemplateEngine templateEngine;
+    @Value("${mailjet.api.secret}")
+    private String mailjetApiSecret;
 
-    @Value("${app.url}")
-    String appUrl;
-
-    @Value("${spring.mail.username}")
+    @Value("${mailjet.api.account}")
     String originEmailAddress;
 
-    public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine) {
-        this.mailSender = mailSender;
-        this.templateEngine = templateEngine;
-    }
+    @Value("${mailjet.error.account}")
+    String errorEmailAddress;
+
+    public EmailService() { }
 
     @Async
-    public void sendSalesNotificationEmail(Email email) {
-        try {
-            MimeMessage message = getMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
-            helper.setPriority(1);
-            helper.setFrom(originEmailAddress);
-            helper.setTo(email.getTo());
-            helper.setSubject(email.getSubject());
+    public void sendEmail(ClientEmailData email) throws Exception {
+        ClientOptions options = ClientOptions.builder()
+                .apiKey(mailjetApiKey)
+                .apiSecretKey(mailjetApiSecret)
+                .build();
 
-            Context context = new Context(Locale.FRANCE);
-            context.setVariable("htmlUtils", new HtmlHelper());
-            context.setVariable("name", "Sales team");
-            context.setVariable("app_url", appUrl);
-            context.setVariable("action_name", email.getBody());
-            String text = templateEngine.process(SALES_EMAIL_TEMPLATE_FR, context);
+        MailjetClient client;
+        MailjetRequest request;
+        MailjetResponse response;
+        client = new MailjetClient(options);
+        request = new MailjetRequest(Emailv31.resource)
+                .property(Emailv31.MESSAGES, new JSONArray()
+                        .put(new JSONObject()
+                                .put(Emailv31.Message.FROM, new JSONObject()
+                                        .put(Emailv31.Message.EMAIL, originEmailAddress)
+                                        .put(Emailv31.Message.NAME, "Programisto - Quote Engine"))
+                                .put(Emailv31.Message.TO, new JSONArray()
+                                        .put(new JSONObject()
+                                                .put(Emailv31.Message.EMAIL, email.getClientEmail())
+                                                .put(Emailv31.Message.NAME, email.getClientName()))
+                        )
+                        .put(Emailv31.Message.TEMPLATEID, 6387948)
+                        .put(Emailv31.Message.TEMPLATELANGUAGE, true)
+                        .put(Emailv31.Message.TEMPLATEERROR_REPORTING, new JSONObject()
+                                .put(Emailv31.Message.EMAIL, errorEmailAddress)
+                                .put(Emailv31.Message.NAME, "Quote Engine")
+                        )
+                        .put(Emailv31.Message.SUBJECT, email.getSubject())
+                        .put(Emailv31.Message.TEXTPART, "Devis Rapide")
+                        .put(Emailv31.Message.HTMLPART, "<h1>Quote Engine</h1>")
+                        .put(Emailv31.Message.VARIABLES, new JSONObject()
+                                .put("clientName", email.getClientName())
+                                .put("devis", new JSONObject(Devis.toJson( email.getDevis() )))
+                                .put("projet", new JSONObject(Projet.toJson( email.getProjet() )))
+                        )));
 
-            MimeMultipart mimeMultipart = new MimeMultipart("related");
-            BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setContent(text, TEXT_HTML_ENCODING);
-            mimeMultipart.addBodyPart(messageBodyPart);
+        JSONObject headers = new JSONObject();
+        headers.put("X-Mailjet-TrackOpen", "0");
+        headers.put("X-Mailjet-TrackClick", "0");
+        headers.put("X-Mailjet-DeduplicateCampaign", "1");
+        headers.put("X-Mailjet-Prio", "1");
+        headers.put("X-Mailjet-SandboxMode", "0");
 
-            mimeMultipart.addBodyPart(logoBodyPart());
+        request.property(Emailv31.Message.HEADERS, headers);
 
-            message.setContent(mimeMultipart);
-
-            mailSender.send(message);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Async
-    public void sendClientQuoteEmail(ClientEmailBody email) {
-        try {
-            MimeMessage message = getMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
-            helper.setPriority(1);
-            helper.setFrom(originEmailAddress);
-            helper.setTo(email.getTo());
-            helper.setSubject(email.getSubject());
-
-            Context context = new Context();
-            context.setVariable("htmlUtils", new HtmlHelper());
-            context.setVariable("devis", email.getDevis());
-            context.setVariable("projet", email.getProjet());
-            String text = templateEngine.process(CLIENT_EMAIL_TEMPLATE_FR, context);
-
-            MimeMultipart mimeMultipart = new MimeMultipart("related");
-            BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setContent(text, TEXT_HTML_ENCODING);
-            mimeMultipart.addBodyPart(messageBodyPart);
-
-            mimeMultipart.addBodyPart(logoBodyPart());
-
-            message.setContent(mimeMultipart);
-
-            mailSender.send(message);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
-    public MimeBodyPart logoBodyPart() throws MessagingException, IOException {
-        MimeBodyPart logoPart = new MimeBodyPart();
-        InputStream imageStream = new ClassPathResource(LOGO).getInputStream();
-
-        logoPart.setDataHandler(new DataHandler(new ByteArrayDataSource(imageStream, "image/jpg")));
-        logoPart.setFileName("programisto.jpg");
-        logoPart.setHeader("Content-ID", "logo");
-
-        return logoPart;
-    }
-
-    private MimeMessage getMimeMessage() {
-        return mailSender.createMimeMessage();
+        response = client.post(request);
+        System.out.println(response.getStatus());
+        System.out.println(response.getData());
     }
 }

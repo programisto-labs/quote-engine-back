@@ -35,13 +35,23 @@ public class ModuleApplicatif {
 
     @NotEmpty(message = "Le champ useCases est obligatoire")
     @JsonAlias("scenarios")
-    @JsonProperty(value = "scenarios", required = true)
+    @JsonProperty(value = "scenarios", required = true, access = JsonProperty.Access.READ_ONLY)
     private List<Scenario> scenarios;
+
+    @JsonAlias("scenariosQuantity")
+    @JsonProperty(value = "scenariosQuantity")
+    private int scenariosQuantity;
+
+    @JsonAlias("totalHours")
+    @JsonProperty(value = "totalHours")
+    private double totalHours;
 
     @Builder
     private ModuleApplicatif(String nom, List<Scenario> scenarios) {
         this.nom = nom;
         this.scenarios = scenarios;
+        this.scenariosQuantity = scenarios.size();
+        this.totalHours = scenarios.stream().mapToDouble(Scenario::getDuree).sum();
     }
 
     public static String toJson(ModuleApplicatif moduleApplicatif) {
@@ -64,14 +74,6 @@ public class ModuleApplicatif {
         } catch (JsonProcessingException e) {
             throw new JsonToObjectConversionException(json, e);
         }
-    }
-
-    public int getTotalScenarios() {
-        return scenarios.size();
-    }
-
-    public double getTotalHours() {
-        return scenarios.stream().mapToDouble(Scenario::getDuree).sum();
     }
 
     @JsonPOJOBuilder(withPrefix = "")

@@ -35,9 +35,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'com.mailjet:mailjet-client:5.2.5'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
 	implementation 'jakarta.jms:jakarta.jms-api:2.0.3'
-	
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -61,6 +63,6 @@ dependencyManagement {
 }
 
 tasks.named('test') {
-	useJUnitPlatform();
+	useJUnitPlatform()
 	jvmArgs '-XX:+EnableDynamicAgentLoading'
 }

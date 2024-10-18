@@ -37,10 +37,22 @@ public class Devis {
     @JsonProperty(value = "modules", required = true)
     private List<ModuleApplicatif> modules;
 
+    @JsonProperty(value = "modulesQuantity")
+    private int modulesQuantity;
+
+    @JsonProperty(value = "totalHours")
+    private double totalHours;
+
     @Builder
     private Devis(String nom, List<ModuleApplicatif> modules) {
         this.nom = nom;
         this.modules = modules;
+        this.modulesQuantity = modules.size();
+        this.totalHours = modules.stream().mapToDouble(ModuleApplicatif::getTotalHours).sum();
+    }
+
+    public static Devis.DevisBuilder builder() {
+        return new Devis.DevisBuilder();
     }
 
     public static String toJson(Devis devis) {
@@ -70,14 +82,6 @@ public class Devis {
         return devis1;
     }
 
-    public int getModulesQuantity() {
-        return modules.size();
-    }
-
-    public double getTotalHours() {
-        return modules.stream().mapToDouble(ModuleApplicatif::getTotalHours).sum();
-    }
-
     @JsonPOJOBuilder(withPrefix = "")
     public static class DevisBuilder {
         @JsonProperty("nom")
@@ -88,6 +92,8 @@ public class Devis {
 
         private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         private static final Validator validator = factory.getValidator();
+
+        DevisBuilder() {}
 
         public DevisBuilder nom(String nom) {
             this.nom = nom;
