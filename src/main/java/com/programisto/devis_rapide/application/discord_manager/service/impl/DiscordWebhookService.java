@@ -1,7 +1,6 @@
 package com.programisto.devis_rapide.application.discord_manager.service.impl;
 
 import com.programisto.devis_rapide.application.discord_manager.entity.WebhookMessageRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpEntity;
@@ -13,9 +12,6 @@ import org.springframework.http.MediaType;
 @Service
 public class DiscordWebhookService implements com.programisto.devis_rapide.application.discord_manager.service.DiscordWebhookService {
 
-    @Value("${app.discord.webhook}")
-    String webhookUrl;
-
     public void sendMessage(WebhookMessageRequest content) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -24,7 +20,7 @@ public class DiscordWebhookService implements com.programisto.devis_rapide.appli
         String json = String.format("{\"content\": \"%s\",\"embeds\": [{\"description\": \"%s\"}]}", content.getContent(), content.getEmbeds());
         HttpEntity<String> request = new HttpEntity<>(json, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(webhookUrl, HttpMethod.POST, request, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(content.getWebhook(), HttpMethod.POST, request, String.class);
 
         if (response.getStatusCode().is2xxSuccessful()) {
             System.out.println("Discord message sent successfully.");

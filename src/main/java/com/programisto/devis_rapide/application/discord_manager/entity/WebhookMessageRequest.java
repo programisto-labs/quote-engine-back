@@ -8,4 +8,5 @@ import lombok.Setter;
 public class WebhookMessageRequest {
     String content;
     String embeds;
+    String webhook;
 }

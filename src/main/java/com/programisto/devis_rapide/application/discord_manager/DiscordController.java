@@ -56,6 +56,9 @@ public class DiscordController {
         if (!Util.isValid(message.getEmbeds())) {
             throw new MissingRequestValueException("The data to send is required");
         }
+        if (!Util.isValid(message.getWebhook())) {
+            throw new MissingRequestValueException("The webhook to send to is required");
+        }
     }
 }
 
