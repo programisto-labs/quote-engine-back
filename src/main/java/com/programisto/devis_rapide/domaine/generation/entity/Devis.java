@@ -37,6 +37,9 @@ public class Devis {
     @JsonProperty(value = "modules", required = true)
     private List<ModuleApplicatif> modules;
 
+    @JsonProperty(value = "dateOfEstimate")
+    private String dateOfEstimate;
+
     @JsonProperty(value = "modulesQuantity")
     private int modulesQuantity;
 
@@ -44,9 +47,10 @@ public class Devis {
     private double totalHours;
 
     @Builder
-    private Devis(String nom, List<ModuleApplicatif> modules) {
+    private Devis(String nom, List<ModuleApplicatif> modules, String dateOfEstimate) {
         this.nom = nom;
         this.modules = modules;
+        this.dateOfEstimate = dateOfEstimate;
         this.modulesQuantity = modules.size();
         this.totalHours = modules.stream().mapToDouble(ModuleApplicatif::getTotalHours).sum();
     }
@@ -91,6 +95,9 @@ public class Devis {
         @JsonProperty("modules")
         private List<ModuleApplicatif> modules;
 
+        @JsonProperty("dateOfEstimate")
+        private String dateOfEstimate;
+
         private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         private static final Validator validator = factory.getValidator();
 
@@ -106,6 +113,11 @@ public class Devis {
             return this;
         }
 
+        public DevisBuilder dateOfEstimate(String dateOfEstimate) {
+            this.dateOfEstimate = dateOfEstimate;
+            return this;
+        }
+
         private void validate(Devis devis) {
             Set<ConstraintViolation<Devis>> violations = validator.validate(devis);
             if (!violations.isEmpty()) {
@@ -118,7 +130,7 @@ public class Devis {
         }
 
         public Devis build() {
-            Devis devis = new Devis(nom, modules);
+            Devis devis = new Devis(nom, modules, dateOfEstimate);
             validate(devis);
             return devis;
         }
