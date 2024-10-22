@@ -94,6 +94,9 @@ public class DiscordController {
         if (message.getProjet() == null) {
             throw new MissingRequestValueException("The projet to send is required");
         }
+        if (message.getClient() == null) {
+            throw new MissingRequestValueException("The client data is required");
+        }
         if (!Util.isValid(message.getWebhook())) {
             throw new MissingRequestValueException("The webhook to send to is required");
         }

@@ -43,8 +43,8 @@ public class Devis {
     @JsonProperty(value = "modulesQuantity")
     private int modulesQuantity;
 
-    @JsonProperty(value = "totalHours")
-    private double totalHours;
+    @JsonProperty(value = "totalJours")
+    private double totalJours;
 
     @Builder
     private Devis(String nom, List<ModuleApplicatif> modules, String dateOfEstimate) {
@@ -52,7 +52,7 @@ public class Devis {
         this.modules = modules;
         this.dateOfEstimate = dateOfEstimate;
         this.modulesQuantity = modules.size();
-        this.totalHours = modules.stream().mapToDouble(ModuleApplicatif::getTotalHours).sum();
+        this.totalJours = modules.stream().mapToDouble(ModuleApplicatif::getTotalJours).sum();
     }
 
     public static Devis.DevisBuilder builder() {

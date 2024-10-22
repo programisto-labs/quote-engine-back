@@ -42,16 +42,16 @@ public class ModuleApplicatif {
     @JsonProperty(value = "scenariosQuantity")
     private int scenariosQuantity;
 
-    @JsonAlias("totalHours")
-    @JsonProperty(value = "totalHours")
-    private double totalHours;
+    @JsonAlias("totalJours")
+    @JsonProperty(value = "totalJours")
+    private double totalJours;
 
     @Builder
     private ModuleApplicatif(String nom, List<Scenario> scenarios) {
         this.nom = nom;
         this.scenarios = scenarios;
         this.scenariosQuantity = scenarios.size();
-        this.totalHours = scenarios.stream().mapToDouble(Scenario::getDuree).sum();
+        this.totalJours = scenarios.stream().mapToDouble(Scenario::getDuree).sum();
     }
 
     public static String toJson(ModuleApplicatif moduleApplicatif) {

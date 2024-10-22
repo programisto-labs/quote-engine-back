@@ -42,6 +42,7 @@ public class DiscordWebhookService implements com.programisto.devis_rapide.appli
 
         jsonPayload.put("devis", content.getDevis());
         jsonPayload.put("projet", content.getProjet());
+        jsonPayload.put("clientData", content.getClient());
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(jsonPayload, headers);
 
