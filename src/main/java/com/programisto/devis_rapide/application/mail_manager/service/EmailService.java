@@ -29,6 +29,9 @@ public class EmailService {
     @Value("${mailjet.error.account}")
     String errorEmailAddress;
 
+    @Value("${mailjet.bcc.account}")
+    String bccEmailAddress;
+
     public EmailService() { }
 
     @Async
@@ -51,7 +54,11 @@ public class EmailService {
                                 .put(Emailv31.Message.TO, new JSONArray()
                                         .put(new JSONObject()
                                                 .put(Emailv31.Message.EMAIL, email.getClientEmail())
-                                                .put(Emailv31.Message.NAME, email.getClientName()))
+                                                .put(Emailv31.Message.NAME, email.getClientName())))
+                                .put(Emailv31.Message.BCC, new JSONArray()
+                                        .put(new JSONObject()
+                                                .put(Emailv31.Message.EMAIL, bccEmailAddress)
+                                                .put(Emailv31.Message.NAME, "Programisto - Devis"))
                         )
                         .put(Emailv31.Message.TEMPLATEID, 6387948)
                         .put(Emailv31.Message.TEMPLATELANGUAGE, true)
