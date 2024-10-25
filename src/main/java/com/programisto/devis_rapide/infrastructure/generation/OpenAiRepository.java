@@ -17,7 +17,7 @@ public class OpenAiRepository implements IDevisRepository {
     private final ChatModel chatModel;
     private final PromptService promptService;
     private final GenerationService generationService;
-    private static final int CHUNK_SIZE = 20;
+    private static final int CHUNK_SIZE = 10;
 
     OpenAiRepository(PromptService promptService, ChatModel chatModel, GenerationService generationService) {
         this.promptService = promptService;
