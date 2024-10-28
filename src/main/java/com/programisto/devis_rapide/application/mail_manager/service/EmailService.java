@@ -66,7 +66,7 @@ public class EmailService {
                                 .put(Emailv31.Message.EMAIL, errorEmailAddress)
                                 .put(Emailv31.Message.NAME, "Programisto - Devis")
                         )
-                        .put(Emailv31.Message.SUBJECT, email.getSubject())
+                        .put(Emailv31.Message.SUBJECT, "Projet " + email.getDevis().getNom() + " estimé.")
                         .put(Emailv31.Message.TEXTPART, "Devis Rapide")
                         .put(Emailv31.Message.HTMLPART, "<h1>Quote Engine</h1>")
                         .put(Emailv31.Message.VARIABLES, new JSONObject()

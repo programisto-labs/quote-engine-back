@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.programisto.devis_rapide.domaine.generation.error.JsonToObjectConversionException;
-import com.programisto.devis_rapide.domaine.generation.error.ObjectToJsonConversionException;
 import jakarta.validation.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -143,6 +141,40 @@ public class Construction {
 
         public ConstructionBuilder suiviDeProjet(Estimate suiviDeProjet) {
             this.suiviDeProjet = suiviDeProjet;
+            return this;
+        }
+
+        public ConstructionBuilder buildFromJours(double jours) {
+            initialisation = Estimate.builder()
+                    .jours(jours * ConstructionCouts.initialisation)
+                    .couts(jours * ConstructionCouts.initialisation * CoutProfil.leaderTechnique)
+                    .build();
+
+            developementAvecTests = Estimate.builder()
+                    .jours(jours * ConstructionCouts.developementAvecTests)
+                    .couts(jours * ConstructionCouts.developementAvecTests * CoutProfil.developpeur)
+                    .build();
+
+            relecture = Estimate.builder()
+                    .jours(jours * ConstructionCouts.relecture)
+                    .couts(jours * ConstructionCouts.relecture * CoutProfil.leaderTechnique)
+                    .build();
+
+            supportTechnique = Estimate.builder()
+                    .jours(jours * ConstructionCouts.supportTechnique)
+                    .couts(jours * ConstructionCouts.supportTechnique * CoutProfil.leaderTechnique)
+                    .build();
+
+            supportFonctionnel = Estimate.builder()
+                    .jours(jours * ConstructionCouts.supportFonctionnel)
+                    .couts(jours * ConstructionCouts.supportFonctionnel * CoutProfil.chefDeProjet)
+                    .build();
+
+            suiviDeProjet = Estimate.builder()
+                    .jours(jours * ConstructionCouts.suiviDeProjet)
+                    .couts(jours * ConstructionCouts.suiviDeProjet * CoutProfil.chefDeProjet)
+                    .build();
+
             return this;
         }
 

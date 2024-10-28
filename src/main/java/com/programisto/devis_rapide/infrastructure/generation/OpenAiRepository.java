@@ -31,13 +31,18 @@ public class OpenAiRepository implements IDevisRepository {
     }
 
     @Override
-    public Devis genere(DemandeClient demandeClient) {
-        if (demandeClient.getUseCases().size() > CHUNK_SIZE) {
-            return generationService.chunk(demandeClient, CHUNK_SIZE).stream()
+    public Devis genere(DemandeClient demandeClient, int chunkSize) {
+        if (demandeClient.getUseCases().size() > chunkSize) {
+            return generationService.chunk(demandeClient, chunkSize).stream()
                     .map(chunk -> Devis.fromJson(getGenerations(chunk))).reduce(Devis::merge).orElseThrow();
         } else {
             return Devis.fromJson(getGenerations(demandeClient));
         }
+    }
+
+    @Override
+    public Devis genere(DemandeClient demandeClient) {
+        return this.genere(demandeClient, CHUNK_SIZE);
     }
 
     private String getSuggestions(DemandeClient demandeClient) {

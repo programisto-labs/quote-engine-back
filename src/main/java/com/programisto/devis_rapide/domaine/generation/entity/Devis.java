@@ -1,5 +1,8 @@
 package com.programisto.devis_rapide.domaine.generation.entity;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 import java.util.Set;
 
@@ -50,7 +53,7 @@ public class Devis {
     private Devis(String nom, List<ModuleApplicatif> modules, String dateOfEstimate) {
         this.nom = nom;
         this.modules = modules;
-        this.dateOfEstimate = dateOfEstimate;
+        this.dateOfEstimate = dateOfEstimate == null ? LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : dateOfEstimate;
         this.modulesQuantity = modules.size();
         this.totalJours = modules.stream().mapToDouble(ModuleApplicatif::getTotalJours).sum();
     }

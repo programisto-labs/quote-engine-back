@@ -137,6 +137,30 @@ public class Conception {
             return this;
         }
 
+        public ConceptionBuilder buildFromJours(double jours) {
+            etude = Estimate.builder()
+                    .jours(jours * ConceptionCouts.etude)
+                    .couts(jours * ConceptionCouts.etude * CoutProfil.chefDeProjet)
+                    .build();
+
+            conceptionFonctionnelle = Estimate.builder()
+                    .jours(jours * ConceptionCouts.conceptionFonctionnelle)
+                    .couts(jours * ConceptionCouts.conceptionFonctionnelle * CoutProfil.chefDeProjet)
+                    .build();
+
+            conceptionTechnique = Estimate.builder()
+                    .jours(jours * ConceptionCouts.conceptionTechnique)
+                    .couts(jours * ConceptionCouts.conceptionTechnique * CoutProfil.leaderTechnique)
+                    .build();
+
+            conceptionCahierDeTests = Estimate.builder()
+                    .jours(jours * ConceptionCouts.conceptionCahierDeTests)
+                    .couts(jours * ConceptionCouts.conceptionCahierDeTests * CoutProfil.chefDeProjet)
+                    .build();
+
+            return this;
+        }
+
         private void validate(Conception conception) {
             Set<ConstraintViolation<Conception>> violations = validator.validate(conception);
             if (!violations.isEmpty()) {

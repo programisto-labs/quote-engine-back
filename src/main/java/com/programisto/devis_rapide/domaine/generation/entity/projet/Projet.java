@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.programisto.devis_rapide.domaine.generation.entity.Devis;
 import com.programisto.devis_rapide.domaine.generation.error.JsonToObjectConversionException;
 import com.programisto.devis_rapide.domaine.generation.error.ObjectToJsonConversionException;
 import jakarta.validation.*;
@@ -134,6 +135,17 @@ public class Projet {
 
         public ProjetBuilder livraison(Livraison livraison) {
             this.livraison = livraison;
+            return this;
+        }
+
+        public ProjetBuilder buildFromDevis(Devis devis) {
+            double jours = devis.getTotalJours();
+
+            conception = Conception.builder().buildFromJours(jours).build();
+            construction = Construction.builder().buildFromJours(jours).build();
+            recette = Recette.builder().buildFromJours(jours).build();
+            livraison = Livraison.builder().buildFromJours(jours).build();
+
             return this;
         }
 

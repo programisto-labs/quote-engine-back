@@ -139,6 +139,30 @@ public class Livraison {
             return this;
         }
 
+        public LivraisonBuilder buildFromJours(double jours) {
+            redactionDMFX = Estimate.builder()
+                    .jours(jours * LivraisonCouts.redactionDMFX)
+                    .couts(jours * LivraisonCouts.redactionDMFX * CoutProfil.leaderTechnique)
+                    .build();
+
+            livraison = Estimate.builder()
+                    .jours(jours * LivraisonCouts.livraison)
+                    .couts(jours * LivraisonCouts.livraison * CoutProfil.leaderTechnique)
+                    .build();
+
+            accompagnement = Estimate.builder()
+                    .jours(jours * LivraisonCouts.accompagnement)
+                    .couts(jours * LivraisonCouts.accompagnement * CoutProfil.chefDeProjet)
+                    .build();
+
+            garantie = Estimate.builder()
+                    .jours(jours * LivraisonCouts.garantie)
+                    .couts(jours * LivraisonCouts.garantie * CoutProfil.developpeur)
+                    .build();
+
+            return this;
+        }
+
         private void validate(Livraison livraison) {
             Set<ConstraintViolation<Livraison>> violations = validator.validate(livraison);
             if (!violations.isEmpty()) {

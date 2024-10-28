@@ -20,6 +20,10 @@ public class DevisService {
         return repository.genere(demandeClient);
     }
 
+    public Devis genereDevis(DemandeClient demandeClient, int chunkSize) {
+        return repository.genere(demandeClient, chunkSize);
+    }
+
     public Autocomplete autocomplete(DemandeClient demandeClient) {
         return repository.autocomplete(demandeClient);
     }

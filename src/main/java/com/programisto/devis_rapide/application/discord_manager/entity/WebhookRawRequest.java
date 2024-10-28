@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.programisto.devis_rapide.domaine.generation.entity.ClientData;
 import com.programisto.devis_rapide.domaine.generation.entity.Devis;
 import com.programisto.devis_rapide.domaine.generation.entity.projet.Projet;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @JsonDeserialize
+@AllArgsConstructor
 public class WebhookRawRequest {
     String webhook;
     Devis devis;

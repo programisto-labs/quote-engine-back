@@ -155,6 +155,35 @@ public class Recette {
             return this;
         }
 
+        public RecetteBuilder buildFromJours(double jours) {
+            livraisonRecette = Estimate.builder()
+                    .jours(jours * RecetteCouts.livraisonRecette)
+                    .couts(jours * RecetteCouts.livraisonRecette * CoutProfil.leaderTechnique)
+                    .build();
+
+            tests = Estimate.builder()
+                    .jours(jours * RecetteCouts.tests)
+                    .couts(jours * RecetteCouts.tests * CoutProfil.chefDeProjet)
+                    .build();
+
+            corrections = Estimate.builder()
+                    .jours(jours * RecetteCouts.corrections)
+                    .couts(jours * RecetteCouts.corrections * CoutProfil.developpeur)
+                    .build();
+
+            relecture = Estimate.builder()
+                    .jours(jours * RecetteCouts.relecture)
+                    .couts(jours * RecetteCouts.relecture * CoutProfil.leaderTechnique)
+                    .build();
+
+            supportTechnique = Estimate.builder()
+                    .jours(jours * RecetteCouts.supportTechnique)
+                    .couts(jours * RecetteCouts.supportTechnique * CoutProfil.leaderTechnique)
+                    .build();
+
+            return this;
+        }
+
         private void validate(Recette recette) {
             Set<ConstraintViolation<Recette>> violations = validator.validate(recette);
             if (!violations.isEmpty()) {
