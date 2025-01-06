@@ -5,6 +5,10 @@ type: 'java:21'
 
 disk: 2048
 
+resources:
+    base_memory: 512
+    memory_ratio: 512
+
 hooks:
     build: 
       ./gradlew clean build
